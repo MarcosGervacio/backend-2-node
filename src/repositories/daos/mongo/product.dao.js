@@ -1,6 +1,6 @@
 import productModel from "./models/productModel.js";
 
-class productDBManager {
+class productDao {
 
     async getAllProducts(params) {
         const paginate = {
@@ -57,4 +57,4 @@ class productDBManager {
     }
 }
 
-export { productDBManager };
+export { productDao };

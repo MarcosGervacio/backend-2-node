@@ -2,6 +2,8 @@ import Router from 'express';
 import {generateToken, verifySign} from '../utils.js';
 import passport from 'passport';
 
+import UserDTO from '../dtos/UserDTO.js';
+
 const router = Router();
 
 router.post("/login", (req, res) => {
@@ -32,11 +34,12 @@ router.post("/logout", (req, res) => {
 
 router.get("/current", passport.authenticate("jwt", {session: false}), (req, res) => {
     if(req.user){
-        return res.json({user: req.user})
+        const userDTO = new UserDTO(req.user); 
+        return res.json({user: userDTO});
     }else{
-        return res.status(401).json({error: "Unauthorized"})
+        return res.status(401).json({error: "Unauthorized"});
     }
-})
+});
 
 
 export default router;

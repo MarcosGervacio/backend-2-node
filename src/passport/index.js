@@ -2,16 +2,24 @@ import passport from 'passport'
 import { ExtractJwt, Strategy as jwtStrategy } from 'passport-jwt'
 import { Strategy as LocalStrategy } from 'passport-local'
 import { PRIVATE_KEY } from '../utils.js'
-import userModel from '../dao/models/user.model.js'
+import userModel from '../repositories/daos/mongo/models/user.model.js'
 import bcrypt from 'bcrypt'
 
 export const initializePassport = () => {
     passport.use("jwt", new jwtStrategy({
         secretOrKey: PRIVATE_KEY,
         jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor])
-    }, (payload, done) => {
-        done(null, payload);
-}))
+    }, async (payload, done) => {
+        try {
+            const email = payload.user?.email || payload.email;
+            if (!email) return done(null, false);
+            const user = await userModel.findOne({ email });
+            if (!user) return done(null, false);
+            done(null, user); 
+        } catch (err) {
+            done(err, false);
+        }
+    }))
 
     passport.use("login", new LocalStrategy(
         { usernameField: "email", passwordField: "password" },

@@ -1,9 +1,9 @@
 import { cartModel } from "./models/cartModel.js";
+import { productDao } from "./product.dao.js"; // Importa el DAO de productos
 
-class cartDBManager {
-
-    constructor(productDBManager) {
-        this.productDBManager = productDBManager;
+class cartDao {
+    constructor() {
+        this.productDBManager = new productDao(); // Instancia el DAO de productos
     }
 
     async getAllCarts() {
@@ -112,4 +112,4 @@ class cartDBManager {
     }
 }
 
-export { cartDBManager };
+export { cartDao };

@@ -1,14 +1,15 @@
 import { Router } from 'express';
-import { productDBManager } from '../dao/productDBManager.js';
-import { cartDBManager } from '../dao/cartDBManager.js';
 import { verifySign } from "../utils.js";
+import ProductService from "../services/product.service.js"; // Corrige la importación
+import CartService from "../services/cart.service.js"; // Asegúrate de importar CartService si lo usas
+
+const productService = new ProductService(); // Instancia el servicio
+const cartService = new CartService(); // Instancia el servicio si lo usas
 
 const router = Router();
-const ProductService = new productDBManager();
-const CartService = new cartDBManager(ProductService);
 
 router.get('/products', async (req, res) => {
-    const products = await ProductService.getAllProducts(req.query);
+    const products = await productService.getAllProducts(req.query);
 
     res.render(
         'products',
@@ -29,7 +30,7 @@ router.get('/products', async (req, res) => {
 });
 
 router.get('/realtimeproducts', async (req, res) => {
-    const products = await ProductService.getAllProducts(req.query);
+    const products = await productService.getAllProducts(req.query);
     res.render(
         'realTimeProducts',
         {
@@ -41,7 +42,7 @@ router.get('/realtimeproducts', async (req, res) => {
 });
 
 router.get('/cart/:cid', async (req, res) => {
-    const response = await CartService.getProductsFromCartByID(req.params.cid);
+    const response = await cartService.getProductsFromCartByID(req.params.cid);
 
     if (response.status === 'error') {
         return res.render(
