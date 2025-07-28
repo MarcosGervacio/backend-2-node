@@ -94,4 +94,13 @@ router.get("/failed", (req, res) => {
   res.render("failed");
 });
 
+router.get("/recuperar-password", (req, res) => {
+    res.render("recuperar-password");
+});
+
+router.get("/reset-password", (req, res) => {
+    const { token } = req.query;
+    res.render("reset-password", { token });
+});
+
 export default router;
