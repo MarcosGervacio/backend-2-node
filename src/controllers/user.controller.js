@@ -118,7 +118,12 @@ class UserController {
 
     async logout(req, res) {
         res.clearCookie("accessToken");
-        res.redirect("/login");
+            res.send(`
+        <script>
+            localStorage.clear();
+            window.location.href = "/login";
+        </script>
+    `);
     }
 
     async current(req, res) {

@@ -4,6 +4,7 @@ import { Strategy as LocalStrategy } from 'passport-local'
 import { PRIVATE_KEY } from '../utils.js'
 import userModel from '../repositories/daos/mongo/models/user.model.js'
 import bcrypt from 'bcrypt'
+import {cartModel} from '../repositories/daos/mongo/models/cartModel.js'
 
 export const initializePassport = () => {
     passport.use("jwt", new jwtStrategy({
@@ -43,14 +44,14 @@ export const initializePassport = () => {
             try {
                 const exists = await userModel.findOne({ email });
                 if (exists) return done(null, false, { message: "User already exists" });
-                const hashedPassword = await bcrypt.hash(password, 10);
+                const hashedPassword = await bcrypt.hash(password, 10);            
                 const newUser = await userModel.create({
                     email,
                     password: hashedPassword,
                     first_name: req.body.first_name,
                     last_name: req.body.last_name,
                     age: req.body.age,
-                    role: req.body.role || "user"
+                    role: req.body.role || "user",
                 });
                 return done(null, newUser);
             } catch (err) {
